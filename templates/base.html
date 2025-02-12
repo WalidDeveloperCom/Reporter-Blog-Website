@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -7,9 +6,9 @@
 	<title>{% block title %}Reporter - Blog{% endblock %}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 	<meta name="description" content="This is meta description">
-	<meta name="author" content="Themefisher">
-	<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-	<link rel="icon" href="images/favicon.png" type="image/x-icon">
+	<meta name="author" content="WalidDeveloper">
+	<link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+	<link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
   
   <!-- theme meta -->
   <meta name="theme-name" content="reporter" />
@@ -20,10 +19,10 @@
 	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 	<!-- # CSS Plugins -->
-	<link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static 'plugins/bootstrap/bootstrap.min.css' %}">
 
 	<!-- # Main Style Sheet -->
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
@@ -32,7 +31,7 @@
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light px-0">
       <a class="navbar-brand order-1 py-0" href="index.html">
-        <img loading="prelaod" decoding="async" class="img-fluid" src="images/logo.png" alt="Reporter Hugo">
+        <img loading="preload" decoding="async" class="img-fluid" src="{% static 'images/logo.png' %}" alt="Reporter Hugo">
       </a>
       <div class="navbar-actions order-3 ml-0 ml-md-4">
         <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
@@ -44,19 +43,18 @@
       </form>
       <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
         <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
-          <li class="nav-item"> <a class="nav-link" href="about.html">About Me</a>
-          </li>
+          <li class="nav-item"> <a class="nav-link" href="about.html">About Me</a></li>
           <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Articles
             </a>
-            <div class="dropdown-menu"> <a class="dropdown-item" href="travel.html">Travel</a>
-              <a class="dropdown-item" href="travel.html">Lifestyle</a>
-              <a class="dropdown-item" href="travel.html">Cruises</a>
+            <div class="dropdown-menu"> 
+              <a class="dropdown-item" href="travel.html">Travel</a>
+              <a class="dropdown-item" href="lifestyle.html">Lifestyle</a>
+              <a class="dropdown-item" href="cruises.html">Cruises</a>
             </div>
           </li>
-          <li class="nav-item"> <a class="nav-link" href="contact.html">Contact</a>
-          </li>
+          <li class="nav-item"> <a class="nav-link" href="contact.html">Contact</a></li>
         </ul>
       </div>
     </nav>
@@ -64,7 +62,6 @@
 </header>
 
 {% block content %}
-
 {% endblock %}
 
 <footer class="bg-dark mt-5">
@@ -72,29 +69,29 @@
       <div class="row">
         <div class="col-lg-10 mx-auto text-center">
           <a class="d-inline-block mb-4 pb-2" href="index.html">
-            <img loading="prelaod" decoding="async" class="img-fluid" src="images/logo-white.png" alt="Reporter Hugo">
+            <img loading="preload" decoding="async" class="img-fluid" src="{% static 'images/logo-white.png' %}" alt="Reporter Hugo">
           </a>
           <ul class="p-0 d-flex navbar-footer mb-0 list-unstyled">
             <li class="nav-item my-0"> <a class="nav-link" href="about.html">About</a></li>
             <li class="nav-item my-0"> <a class="nav-link" href="article.html">Elements</a></li>
             <li class="nav-item my-0"> <a class="nav-link" href="privacy-policy.html">Privacy Policy</a></li>
-            <li class="nav-item my-0"> <a class="nav-link" href="terms-conditions.html">Terms Conditions</a></li>
+            <li class="nav-item my-0"> <a class="nav-link" href="terms-conditions.html">Terms & Conditions</a></li>
             <li class="nav-item my-0"> <a class="nav-link" href="404.html">404 Page</a></li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="copyright bg-dark content">Designed &amp; Developed By <a href="https://WalidDeveloper.com/">WalidDeveloper</a></div>
+    <div class="copyright bg-dark content">
+      Designed &amp; Developed By <a href="https://WalidDeveloper.com/">WalidDeveloper</a>
+    </div>
   </footer>
   
-  
   <!-- # JS Plugins -->
-  <script src="plugins/jquery/jquery.min.js"></script>
-  <script src="plugins/bootstrap/bootstrap.min.js"></script>
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'plugins/bootstrap/bootstrap.min.js' %}"></script>
   
   <!-- Main Script -->
-  <script src="js/script.js"></script>
-  
-  </body>
-  </html>
-  
+  <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>
