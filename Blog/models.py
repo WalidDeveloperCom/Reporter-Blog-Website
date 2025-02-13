@@ -25,11 +25,9 @@ class Tag(models.Model):
 
 # Author model - Assuming you're associating with the Django User model
 class Author(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile_pictures/', default='profile_pictures/default.png')
     bio = models.TextField(max_length=200, default='No bio...')
-    email = models.EmailField(max_length=100, blank=False, unique=True, default=False)
-    password = models.CharField(max_length=100, blank=False, default=False)
 
     def __str__(self):
         return self.user.username
@@ -39,10 +37,11 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     image = models.ImageField(upload_to='post_images/')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    tags = models.ManyToManyField(Tag, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    tags = models.ManyToManyField(Tag, blank=True, null=True)
     date_posted = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, default=1)
+    update_at = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
