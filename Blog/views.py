@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.utils import timezone
 from . models import Post
 
-# def index(request):
-#    return render(request, 'blog/index.html')
+def index(request):
+    return render(request, 'blog/index.html')
 
 def BlogPost(request):
     posts = Post.object.all()
@@ -13,3 +13,7 @@ def BlogPost(request):
 def latest_post(request):
     latest_post = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date').first()
     return render(request, 'blog/latest_post.html', {'latest_post': latest_post})
+
+def post_details(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, 'blog/post_details.html', {'post': post})
