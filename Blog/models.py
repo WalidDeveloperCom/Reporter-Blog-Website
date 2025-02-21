@@ -38,7 +38,7 @@ class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='post_images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
-    tags = models.ManyToManyField(Tag, blank=True, null=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
