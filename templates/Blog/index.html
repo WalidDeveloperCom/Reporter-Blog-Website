@@ -18,7 +18,7 @@
                     <div class="post-info"> <span class="text-uppercase">04 Jun 2021</span>
                       <span class="text-uppercase">3 minutes read</span>
                     </div>
-                    <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100">
+                    <img loading="lazy" decoding="async" src="{% static '{{ post.image.url }}' %}" alt="{{ post.title }}" class="w-100">
                   </div>
                 </a>
                 <div class="card-body px-0 pb-1">
