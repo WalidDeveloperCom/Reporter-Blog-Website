@@ -1,3 +1,4 @@
+#model.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -11,7 +12,8 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
+        super(Category, self)
+              
 # Tag model
 class Tag(models.Model):
     name = models.CharField(max_length=50)
@@ -31,7 +33,7 @@ class Author(models.Model):
 
     def __str__(self):
         return self.user.username
-
+    
 # Post model
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -45,3 +47,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def read_time(self):
+        # Assuming an average reading speed of 200 words per minute
+        word_count = len(self.content.split())
+        read_time_minutes = word_count // 200  # Integer division to get whole minutes
+        if read_time_minutes == 0:
+            read_time_minutes = 1  # Minimum read time of 1 minute
+        return read_time_minutes
+

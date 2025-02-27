@@ -1,19 +1,30 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.db.models import Count
 from django.utils import timezone
-from . models import Post
+from .models import Post, Category
 
 def index(request):
-    return render(request, 'blog/index.html')
+    categories = Category.objects.annotate(post_count=Count('post'))
+    latest_post = Post.objects.filter(created_at__lte=timezone.now()).order_by('-created_at')[:1]
+    context = {
+        'categories': categories,
+        'latest_post': latest_post,
+    }
+    return render(request, 'blog/index.html', context)
 
-def BlogPost(request):
-    posts = Post.object.all()
-    return render(request, 'blog/index.html', {"posts": post})
+def blog_post(request):
+    posts = Post.objects.all()
+    return render(request, 'blog/index.html', {"posts": posts})
 
 def latest_post(request):
-    latest_post = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date').first()
+    latest_post = Post.objects.filter(created_at__lte=timezone.now()).order_by('-created_at').first()
     return render(request, 'blog/latest_post.html', {'latest_post': latest_post})
 
 def post_details(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     return render(request, 'blog/post_details.html', {'post': post})
+
+def category_list(request):
+    categories = Category.objects.all()
+    context = {'categories': categories}
+    return render(request, 'blog/category_list.html', context)
