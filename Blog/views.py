@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Count
 from django.utils import timezone
-from .models import Post, Category
+from .models import Post, Category, id
 
 
 def index(request):
@@ -30,7 +30,7 @@ def post_details(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     return render(request, 'blog/post_details.html', {'post': post})
 
-def category_list(request):
+def category_list(request, id):
     categories = Category.objects.all()
     context = {'categories': categories}
     return render(request, 'blog/category_list.html', context)
@@ -42,3 +42,15 @@ def about(request):
 def contact(request):
     context = {}
     return render(request, 'blog/contact.html', context)
+
+def PrivacyPolicy(request):
+    context = {}
+    return render(request, 'blog/privacy-policy.html', context)
+
+def TermsConditions(request):
+    context = {}
+    return render(request, 'blog/terms-conditions.html', context)
+
+def disclaimer(request):
+    context = {}
+    return render(request, 'blog/disclaimer.html', context)

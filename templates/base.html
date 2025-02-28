@@ -30,7 +30,7 @@
 <header class="navigation">
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light px-0">
-      <a class="navbar-brand order-1 py-0" href="/index/">
+      <a class="navbar-brand order-1 py-0" href={% url 'index' %}>
         <img loading="preload" decoding="async" class="img-fluid" src="{% static 'images/logo.png' %}" alt="Reporter Hugo">
       </a>
       <div class="navbar-actions order-3 ml-0 ml-md-4">
@@ -43,18 +43,18 @@
       </form>
       <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
         <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
-          <li class="nav-item"> <a class="nav-link" href="about.html">About Me</a></li>
+          <li class="nav-item"> <a class="nav-link" href={% url 'about' %}>About Me</a></li>
           <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="/about/" role="button"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Articles
             </a>
-            <div class="dropdown-menu"> 
-              <a class="dropdown-item" href="travel.html">Travel</a>
-              <a class="dropdown-item" href="lifestyle.html">Lifestyle</a>
-              <a class="dropdown-item" href="cruises.html">Cruises</a>
+            {% for category in categories %}
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'category_detail' category.id %}">{{ category.name }}</a>
             </div>
+           {% endfor %}
           </li>
-          <li class="nav-item"> <a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"> <a class="nav-link" href={% url 'contact' %}>Contact</a></li>
         </ul>
       </div>
     </nav>
@@ -68,14 +68,14 @@
     <div class="container section">
       <div class="row">
         <div class="col-lg-10 mx-auto text-center">
-          <a class="d-inline-block mb-4 pb-2" href="index.html">
+          <a class="d-inline-block mb-4 pb-2" href={% url 'index' %}>
             <img loading="preload" decoding="async" class="img-fluid" src="{% static 'images/logo-white.png' %}" alt="Reporter Hugo">
           </a>
           <ul class="p-0 d-flex navbar-footer mb-0 list-unstyled">
-            <li class="nav-item my-0"> <a class="nav-link" href="/about/">About</a></li>
-            <li class="nav-item my-0"> <a class="nav-link" href="/privacy-policy/">Privacy Policy</a></li>
-            <li class="nav-item my-0"> <a class="nav-link" href="/terms-conditions/">Terms & Conditions</a></li>
-            <li class="nav-item my-0"> <a class="nav-link" href="/disclaimer/">Disclaimer</a></li>
+            <li class="nav-item my-0"> <a class="nav-link" href={% url 'about' %}>About</a></li>
+            <li class="nav-item my-0"> <a class="nav-link" href={% url 'privacy-policy' %}>Privacy Policy</a></li>
+            <li class="nav-item my-0"> <a class="nav-link" href={% url 'terms-conditions' %}>Terms & Conditions</a></li>
+            <li class="nav-item my-0"> <a class="nav-link" href={% url 'disclaimer' %}>Disclaimer</a></li>
           </ul>
         </div>
       </div>

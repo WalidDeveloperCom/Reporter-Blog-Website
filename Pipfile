@@ -8,6 +8,7 @@ django = "*"
 pillow = "*"
 pipfile = "*"
 django-ckeditor = "*"
+django-shortuuidfield = "*"
 
 [dev-packages]
 

@@ -2,10 +2,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from shortuuidfield import ShortUUIDField
 from ckeditor.fields import RichTextField
 
 # Category model
 class Category(models.Model):
+    cid = ShortUUIDField(unique=True, length=10, max_length=30, prefix="cat - ", alphabet="abcdefgh12345")
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, null=True, blank=True)
     def __str__(self):
