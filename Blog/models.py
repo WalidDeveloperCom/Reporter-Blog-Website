@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField
 
 # Category model
 class Category(models.Model):
@@ -37,8 +38,8 @@ class Author(models.Model):
 # Post model
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    content = models.TextField()
-    image = models.ImageField(upload_to='post_images/')
+    content = RichTextField()
+    image = models.ImageField(upload_to='post_images/', default='default.jpg')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -56,3 +57,11 @@ class Post(models.Model):
             read_time_minutes = 1  # Minimum read time of 1 minute
         return read_time_minutes
 
+#Pages
+class PagesMenu(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='PagesMenu_images', default='default.jpg')
+    content = RichTextField()
+
+    def __str__(self):
+        return self.title
