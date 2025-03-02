@@ -14,7 +14,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Category, self)
+        super(Category, self).save(*args, **kwargs)
               
 # Tag model
 class Tag(models.Model):
