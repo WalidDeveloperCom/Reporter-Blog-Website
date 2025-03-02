@@ -2,12 +2,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-from shortuuidfield import ShortUUIDField
-from ckeditor.fields import RichTextField
+#from shortuuidfield import ShortUUIDField
+from ckeditor.fields import RichTextField # type: ignore
 
 # Category model
 class Category(models.Model):
-    cid = ShortUUIDField(unique=True, length=10, max_length=30, prefix="cat - ", alphabet="abcdefgh12345")
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, null=True, blank=True)
     def __str__(self):
@@ -52,11 +51,10 @@ class Post(models.Model):
         return self.title
 
     def read_time(self):
-        # Assuming an average reading speed of 200 words per minute
         word_count = len(self.content.split())
-        read_time_minutes = word_count // 200  # Integer division to get whole minutes
+        read_time_minutes = word_count // 200 
         if read_time_minutes == 0:
-            read_time_minutes = 1  # Minimum read time of 1 minute
+            read_time_minutes = 1  
         return read_time_minutes
 
 #Pages

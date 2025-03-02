@@ -9,6 +9,8 @@ pillow = "*"
 pipfile = "*"
 django-ckeditor = "*"
 django-shortuuidfield = "*"
+django-ckeditor-5 = "*"
+django-jazzmin = "*"
 
 [dev-packages]
 
