@@ -1,82 +1,71 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib import messages
 from django.db.models import Count
-from django.utils import timezone
-from .models import Post, Category, Tag
+from .models import Post, Category, Author
+from .forms import CommentForm
 
-def index(request):
-    categories = Category.objects.annotate(post_count=Count('post'))
-    tags = Tag.objects.annotate(post_count=Count('post'))
-    latest_post = Post.objects.filter(created_at__lte=timezone.now()).order_by('-created_at')[:1]
-    post_list = Post.objects.all()
-    paginator = Paginator(post_list, 10) 
-    page_number = request.GET.get('page')
+class HomeView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'posts'
+    paginate_by = 8
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['featured_post'] = Post.objects.filter(is_featured=True).first()
+        context['recommended_posts'] = Post.objects.order_by('-published_date')[:5]
+        return context
 
-    try:
-        if page_number is None or int(page_number) < 1:
-            page_number = 1
-    except (TypeError, ValueError):
-        page_number = 1
-
-    print(f"Page number: {page_number}") 
-
-    try:
-        page_obj = paginator.page(page_number)
-    except PageNotAnInteger:
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/article.html'
+    context_object_name = 'post'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recommended_posts'] = Post.objects.exclude(id=self.object.id).order_by('?')[:5]
+        context['comment_form'] = CommentForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
         
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.save()
+            messages.success(request, 'Your comment has been submitted and is awaiting approval.')
+            return redirect('post_detail', slug=self.object.slug)
+        
+        context = self.get_context_data(object=self.object)
+        context['comment_form'] = form
+        return self.render_to_response(context)
 
-    context = {
-        'page_obj': page_obj,
-        'latest_post': latest_post,
-        'categories': categories,
-        'tags': tags,
-    }
-    return render(request, 'blog/index.html', context)
+class CategoryView(ListView):
+    model = Post
+    template_name = 'blog/travel.html'
+    context_object_name = 'posts'
+    paginate_by = 8
+    
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        return Post.objects.filter(categories=self.category)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.category
+        context['recommended_posts'] = Post.objects.order_by('-published_date')[:5]
+        return context
 
-def latest_post(request):
-    latest_post = Post.objects.filter(created_at__lte=timezone.now()).order_by('-created_at').first()
-    return render(request, 'blog/latest_post.html', {'latest_post': latest_post})
-
-def recommended(request):
-    recommended = Post.objects.filter(created_at__lte=timezone.now()).order_by('-created_at').first()
-    return render(request, 'blog/recommended.html', {'recommended': recommended})
-
-def post_details(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    return render(request, 'blog/post_details.html', {'post': post})
-
-def about(request):
-    context = {}
-    return render(request, 'blog/about.html', context)
-
-def travel(request):
-    context = {}
-    return render(request, 'blog/travel.html', context)
-
-def lifestyle(request):
-    context = {}
-    return render(request, 'blog/lifestyle.html', context)
-
-def cruises(request):
-    context = {}
-    return render(request, 'blog/cruises.html', context)
-
-def contact(request):
-    context = {}
-    return render(request, 'blog/contact.html', context)
-
-def PrivacyPolicy(request):
-    context = {}
-    return render(request, 'blog/privacy-policy.html', context)
-
-def TermsConditions(request):
-    context = {}
-    return render(request, 'blog/terms-conditions.html', context)
-
-def disclaimer(request):
-    context = {}
-    return render(request, 'blog/disclaimer.html', context)
+class AuthorDetailView(DetailView):
+    model = Author
+    template_name = 'blog/about.html'
+    context_object_name = 'author'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = Post.objects.filter(author=self.object)[:5]
+        context['recommended_posts'] = Post.objects.order_by('-published_date')[:5]
+        return context

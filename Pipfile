@@ -4,13 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
-pillow = "*"
 pipfile = "*"
-django-ckeditor = "*"
 django-ckeditor-5 = "*"
 django-jazzmin = "*"
 django-shortuuidfield = "*"
+django = "==4.2.10"
+pillow = "==10.1.0"
+django-ckeditor = "==6.7.0"
+django-crispy-forms = "==2.1.0"
+crispy-bootstrap4 = "==2023.1"
 
 [dev-packages]
 

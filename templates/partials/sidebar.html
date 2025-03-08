@@ -1,0 +1,72 @@
+<div class="col-lg-4">
+    <div class="widget-blocks">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="widget">
+            <div class="widget-body">
+              <img loading="lazy" decoding="async" src="{{ author.profile_picture.url }}" alt="About Me" class="w-100 author-thumb-sm d-block">
+              <h2 class="widget-title my-3">{{ author }}</h2>
+              <p class="mb-3 pb-2">{{ author.bio|truncatewords:30 }}</p>
+              <a href="{% url 'author_detail' pk=author.pk %}" class="btn btn-sm btn-outline-primary">Know More</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-6">
+          <div class="widget">
+            <h2 class="section-title mb-3">Recommended</h2>
+            <div class="widget-body">
+              <div class="widget-list">
+                {% for post in recommended_posts|slice:":1" %}
+                  <article class="card mb-4">
+                    <div class="card-image">
+                      <div class="post-info">
+                        <span class="text-uppercase">{{ post.read_time }} minutes read</span>
+                      </div>
+                      <img loading="lazy" decoding="async" src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-100">
+                    </div>
+                    <div class="card-body px-0 pb-1">
+                      <h3><a class="post-title post-title-sm" href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a></h3>
+                      <p class="card-text">{{ post.excerpt|truncatewords:10 }}</p>
+                      <div class="content">
+                        <a class="read-more-btn" href="{% url 'post_detail' slug=post.slug %}">Read Full Article</a>
+                      </div>
+                    </div>
+                  </article>
+                {% endfor %}
+                
+                {% for post in recommended_posts|slice:"1:5" %}
+                  <a class="media align-items-center" href="{% url 'post_detail' slug=post.slug %}">
+                    {% if post.featured_image %}
+                      <img loading="lazy" decoding="async" src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-100">
+                    {% else %}
+                      <span class="image-fallback image-fallback-xs">No Image Specified</span>
+                    {% endif %}
+                    <div class="media-body ml-3">
+                      <h3 style="margin-top:-5px">{{ post.title|truncatechars:40 }}</h3>
+                      <p class="mb-0 small">{{ post.excerpt|truncatewords:8 }}</p>
+                    </div>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-6">
+          <div class="widget">
+            <h2 class="section-title mb-3">Categories</h2>
+            <div class="widget-body">
+              <ul class="widget-list">
+                {% for category in categories %}
+                  <li>
+                    <a href="{% url 'category' slug=category.slug %}">
+                      {{ category.name }}<span class="ml-auto">({{ category.post_count }})</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

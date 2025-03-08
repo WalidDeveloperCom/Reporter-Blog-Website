@@ -1,67 +1,83 @@
-#model.py
 from django.db import models
-from django.contrib.auth.models import User
+from django.urls import reverse
 from django.utils.text import slugify
-#from shortuuidfield import ShortUUIDField
-from ckeditor.fields import RichTextField # type: ignore
+from ckeditor.fields import RichTextField
+from django.contrib.auth.models import User
+from django.utils import timezone
 
-# Category model
 class Category(models.Model):
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(unique=True, null=True, blank=True)
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
-              
-# Tag model
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(unique=True, null=True, blank=True)
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Tag, self).save(*args, **kwargs)
-
-# Author model - Assuming you're associating with the Django User model
-class Author(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', default='profile_pictures/default.png')
-    bio = models.TextField(max_length=200, default='No bio...')
-
-    def __str__(self):
-        return self.user.username
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     
-# Post model
+    class Meta:
+        verbose_name_plural = 'Categories'
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'slug': self.slug})
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    @property
+    def post_count(self):
+        return self.posts.count()
+
+class Author(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField()
+    profile_picture = models.ImageField(upload_to='authors/', default='authors/default.jpg')
+    
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
+    
+    def get_absolute_url(self):
+        return reverse('author_detail', kwargs={'pk': self.pk})
+
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
     content = RichTextField()
-    image = models.ImageField(upload_to='post_images/', default='default.jpg')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
-    tags = models.ManyToManyField(Tag, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-
+    excerpt = models.TextField(blank=True)
+    featured_image = models.ImageField(upload_to='posts/')
+    categories = models.ManyToManyField(Category, related_name='posts')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
+    published_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+    is_featured = models.BooleanField(default=False)
+    read_time = models.PositiveIntegerField(default=3, help_text='Estimated read time in minutes')
+    
+    class Meta:
+        ordering = ['-published_date']
+    
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('post_detail', kwargs={'slug': self.slug})
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        if not self.excerpt and self.content:
+            self.excerpt = self.content[:200].replace('&nbsp;', ' ')
+        super().save(*args, **kwargs)
 
-    def read_time(self):
-        word_count = len(self.content.split())
-        read_time_minutes = word_count // 200 
-        if read_time_minutes == 0:
-            read_time_minutes = 1  
-        return read_time_minutes
-
-#Pages
-class PagesMenu(models.Model):
-    title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='PagesMenu_images', default='default.jpg')
-    content = RichTextField()
-
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    content = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_date']
+    
     def __str__(self):
-        return self.title
+        return f'Comment by {self.name} on {self.post}'
