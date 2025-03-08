@@ -9,26 +9,24 @@ def index(request):
     categories = Category.objects.annotate(post_count=Count('post'))
     tags = Tag.objects.annotate(post_count=Count('post'))
     latest_post = Post.objects.filter(created_at__lte=timezone.now()).order_by('-created_at')[:1]
-    post_list = Post.objects.all()  # Fetch all posts for pagination
-    paginator = Paginator(post_list, 10)  # Show 10 posts per page
+    post_list = Post.objects.all()
+    paginator = Paginator(post_list, 10) 
     page_number = request.GET.get('page')
 
     try:
-        # Validate the page number
         if page_number is None or int(page_number) < 1:
             page_number = 1
     except (TypeError, ValueError):
         page_number = 1
 
-    print(f"Page number: {page_number}")  # Debug statement
+    print(f"Page number: {page_number}") 
 
     try:
         page_obj = paginator.page(page_number)
     except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
+        
         page_obj = paginator.page(1)
     except EmptyPage:
-        # If page is out of range (e.g., 9999), deliver last page of results.
         page_obj = paginator.page(paginator.num_pages)
 
     context = {
