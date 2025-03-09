@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="col-lg-8 mx-auto mb-5 mb-lg-0">
-        <img loading="lazy" decoding="async" src="{% static '{{ author.profile_picture.url }}' %}" class="img-fluid w-100 mb-4" alt="{{ author }}">
+        <img loading="lazy" decoding="async" src="{{ author.profile_picture.url }}" class="img-fluid w-100 mb-4" alt="{{ author }}">
         <h1 class="mb-4">{{ author }}</h1>
         <div class="content">
           {{ author.bio|safe }}

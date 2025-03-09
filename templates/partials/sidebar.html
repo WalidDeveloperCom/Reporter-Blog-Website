@@ -6,18 +6,16 @@
         <div class="col-lg-12">
           <div class="widget">
             <div class="widget-body">
-              {% if author and author.profile_picture %}
-                <img loading="lazy" decoding="async" src="{{ author.profile_picture.url }}" alt="About Me" class="w-100 author-thumb-sm d-block">
-              {% else %}
-                <img loading="lazy" decoding="async" src="{% static 'images/author.jpg' %}" alt="About Me" class="w-100 author-thumb-sm d-block">
-              {% endif %}
-              <h2 class="widget-title my-3">{{ author }}</h2>
-              <p class="mb-3 pb-2">{{ author.bio|truncatewords:30 }}</p>
-              {% if author and author.pk %}
-                <a href="{% url 'author_detail' pk=author.pk %}" class="btn btn-sm btn-outline-primary">Know More</a>
-              {% else %}
-                <p class="text-muted">Author information is unavailable.</p>
-              {% endif %}
+              <div class="col-lg-12">
+                <div class="widget">
+                  <div class="widget-body">
+                    <img loading="lazy" decoding="async" src="{% static 'images/author.jpg' %}" alt="About Me" class="w-100 author-thumb-sm d-block">
+                    <h2 class="widget-title my-3">MD. Walid</h2>
+                    <p class="mb-3 pb-2">Hello, I’m Hootan Safiyari. A Content writter, Developer and Story teller. Working as a Content writter at CoolTech Agency. Quam nihil …</p> <a href="author/1/" class="btn btn-sm btn-outline-primary">Know
+                      More</a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -50,15 +48,35 @@
             <h2 class="section-title mb-3">Categories</h2>
             <div class="widget-body">
               <ul class="widget-list">
-                {% for category in categories %}
-                  <li>
-                    <a href="{% url 'category' slug=category.slug %}">
-                      {{ category.name }}<span class="ml-auto">({{ category.post_count }})</span>
-                    </a>
-                  </li>
-                {% empty %}
+                {% if categories %}
+                  {% for category in categories %}
+                    <li>
+                      <a href="{% url 'category' slug=category.slug %}">
+                        {{ category.name }} <span class="ml-auto">({{ category.post_count }})</span>
+                      </a>
+                    </li>
+                  {% endfor %}
+                {% else %}
                   <li>No categories available</li>
-                {% endfor %}
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+          <div class="widget">
+            <h2 class="section-title mb-3">Tag</h2>
+            <div class="widget-body">
+              <ul class="widget-list">
+                {% if Tags %}
+                  {% for tag in Tags %}
+                    <li>
+                      <a href="{% url 'tag' slug=tag.slug %}">
+                        {{ tag.name }} <span class="ml-auto">({{ tag.post_count }})</span>
+                      </a>
+                    </li>
+                  {% endfor %}
+                {% else %}
+                  <li>No categories available (DEBUG: No data received)</li>
+                {% endif %}
               </ul>
             </div>
           </div>

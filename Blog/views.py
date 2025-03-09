@@ -2,19 +2,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib import messages
 from django.db.models import Count
-from .models import Post, Category, Author
+from .models import Post, Category, Tag, Author
 from .forms import CommentForm
 
 class HomeView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'posts'
-    paginate_by = 8
-    
+    paginate_by = 6
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['featured_post'] = Post.objects.filter(is_featured=True).first()
         context['recommended_posts'] = Post.objects.order_by('-published_date')[:5]
+        # Ensure categories are correctly annotated
+        context['categories'] = Category.objects.annotate(num_posts=Count('posts'))  
+        context['Tags'] = Tag.objects.annotate(num_posts=Count('posts'))
         return context
 
 class PostDetailView(DetailView):
@@ -47,7 +50,7 @@ class CategoryView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'posts'
-    paginate_by = 8
+    paginate_by = 6
     
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
@@ -63,25 +66,31 @@ class TagView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'posts'
-    paginate_by = 8
+    paginate_by = 6
     
     def get_queryset(self):
-        self.category = get_object_or_404(Tag, slug=self.kwargs['slug'])
-        return Post.objects.filter(categories=self.category)
+        self.tag = get_object_or_404(Tag, slug=self.kwargs['slug'])
+        return Post.objects.filter(tags=self.tag)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['Tag'] = self.Tag
+        context['tag'] = self.tag 
         context['recommended_posts'] = Post.objects.order_by('-published_date')[:5]
         return context
 
+
 class AuthorDetailView(DetailView):
     model = Author
-    template_name = 'blog/about.html'
     context_object_name = 'author'
-    
+
+    def get_template_names(self):
+        if 'sidebar' in self.request.path:
+            return ['blog/index.html']
+        return ['blog/about.html']
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['posts'] = Post.objects.filter(author=self.object)[:5]
         context['recommended_posts'] = Post.objects.order_by('-published_date')[:5]
         return context
+

@@ -24,22 +24,25 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'published_date', 'is_featured')
+    list_display = ('title','is_featured', 'author', 'published_date')
     list_filter = ('categories', 'is_featured', 'published_date')
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'published_date'
-    filter_horizontal = ('categories',)
+    filter_horizontal = ('categories','tags')
     
     fieldsets = (
         (None, {
-            'fields': ('title', 'slug', 'author', 'content', 'excerpt', 'featured_image')
+            'fields': ('title', 'slug', 'author', 'featured_image', 'content', 'excerpt')
         }),
         ('Publishing', {
             'fields': ('published_date', 'is_featured', 'read_time')
         }),
         ('Categories', {
             'fields': ('categories',)
+        }),
+        ('Tags', {
+            'fields': ('tags',)
         }),
     )
 

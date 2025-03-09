@@ -69,10 +69,11 @@ class Post(models.Model):
     excerpt = models.TextField(blank=True)
     featured_image = models.ImageField(upload_to='posts/', default='default_image.jpg')
     categories = models.ManyToManyField(Category, related_name='posts')
+    tags = models.ManyToManyField(Tag, related_name='posts') 
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
     published_date = models.DateTimeField(default=timezone.now)
-    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
     is_featured = models.BooleanField(default=False)
     read_time = models.PositiveIntegerField(default=3, help_text='Estimated read time in minutes')
     
