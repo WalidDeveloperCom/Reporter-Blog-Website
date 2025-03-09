@@ -1,8 +1,14 @@
 from django.contrib import admin
-from .models import Category, Author, Post, Comment
+from .models import Category, Tag, Author, Post, Comment
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'post_count')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name',)
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'post_count')
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)

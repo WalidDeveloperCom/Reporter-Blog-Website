@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -27,6 +28,29 @@ class Category(models.Model):
     def post_count(self):
         return self.posts.count()
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
+    
+    class Meta:
+        verbose_name_plural = 'Tags'
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('tag', kwargs={'slug': self.slug})
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    @property
+    def post_count(self):
+        return self.posts.count()
+
+
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField()
@@ -40,15 +64,15 @@ class Author(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(null=False, blank=False, default="title-slug")
     content = RichTextField()
     excerpt = models.TextField(blank=True)
-    featured_image = models.ImageField(upload_to='posts/')
+    featured_image = models.ImageField(upload_to='posts/', default='default_image.jpg')
     categories = models.ManyToManyField(Category, related_name='posts')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
     published_date = models.DateTimeField(default=timezone.now)
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     read_time = models.PositiveIntegerField(default=3, help_text='Estimated read time in minutes')
     

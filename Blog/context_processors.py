@@ -8,3 +8,4 @@ def categories_processor(request):
         'categories': categories,
         'recent_posts': recent_posts,
     }
+
