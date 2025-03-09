@@ -29,7 +29,7 @@ class Category(models.Model):
         return self.posts.count()
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
     
     class Meta:
