@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
-
 {% block title %}{{ post.title }} - Reporter Blog{% endblock %}
 {% block meta_description %}{{ post.excerpt }}{% endblock %}
 
@@ -51,11 +49,25 @@
           {% endfor %}
           
           <h3 class="mt-4">Leave a Comment</h3>
-          <form method="post">
-            {% csrf_token %}
-            {{ comment_form|crispy }}
-            <button type="submit" class="btn btn-primary">Submit Comment</button>
-          </form>
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ comment_form.name }}
+                </div>
+                
+                <div class="mb-3">
+                    {{ comment_form.email }}
+                </div>
+                
+                <div class="mb-3">
+                    {{ comment_form.content }}
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </div>
+            </form>
         </div>
       </div>
     </div>

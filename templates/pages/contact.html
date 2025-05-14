@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
-
 {% block title %}Contact Us - Reporter Blog{% endblock %}
 
 {% block content %}
@@ -32,15 +30,65 @@
         </div>
       </div>
       <div class="col-lg-6 mt-4 mt-lg-0">
-        <form method="POST" action="{% url 'contact' %}" class="row">
-          {% csrf_token %}
-          {{ form|crispy }}
-          <div class="col-12">
-            <button class="btn btn-outline-primary" type="submit">Send Message</button>
-          </div>
+        <!-- Update form action URL here -->
+        <form method="POST" action="{% url 'contact' %}" class="row" id="contact-form">
+            {% csrf_token %}
+            
+            <div class="col-md-6">
+                {{ form.name }}
+            </div>
+            
+            <div class="col-md-6">
+                {{ form.email }}
+            </div>
+            
+            <div class="col-12 mt-3">
+                {{ form.subject }}
+            </div>
+            
+            <div class="col-12 mt-3">
+                {{ form.message }}
+            </div>
+            
+            <div class="col-12 mt-5">
+                <button class="btn btn-outline-primary" type="submit">Send Message</button>
+            </div>
         </form>
       </div>
     </div>
   </div>
 </section>
+
+{% if messages %}
+  <div id="message-toast" class="d-none">
+    {% for message in messages %}
+      <div class="toast-message" data-type="{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+  // Check if there are messages and display them as Toast
+  const messageElement = document.getElementById('message-toast');
+  if (messageElement && messageElement.children.length > 0) {
+    const messageType = messageElement.querySelector('.toast-message').getAttribute('data-type');
+    const messageText = messageElement.querySelector('.toast-message').innerText;
+    
+    // Configure Toastify options based on message type
+    Toastify({
+      text: messageText,
+      duration: 5000, // 5 seconds
+      backgroundColor: messageType === 'success' ? 'green' : 'red',
+      close: true,
+      position: "center",// `left`, `center` or `right`
+      gravity: "top",  // `top` or `bottom`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+    }).showToast();
+  }
+</script>
+{% endblock %}
 {% endblock %}

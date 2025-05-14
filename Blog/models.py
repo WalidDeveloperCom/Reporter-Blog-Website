@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from ckeditor.fields import RichTextField # type: ignore
+from markdownx.models import MarkdownxField
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -65,7 +65,7 @@ class Author(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(null=False, blank=False, default="title-slug")
-    content = RichTextField()
+    content = MarkdownxField()
     excerpt = models.TextField(blank=True)
     featured_image = models.ImageField(upload_to='posts/', default='default_image.jpg')
     categories = models.ManyToManyField(Category, related_name='posts')
