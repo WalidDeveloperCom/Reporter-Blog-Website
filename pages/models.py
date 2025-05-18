@@ -1,10 +1,10 @@
 from django.db import models
-from markdownx.models import MarkdownxField
+from tinymce.models import HTMLField
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
-    content = MarkdownxField()
+    content = HTMLField()
     
     def __str__(self):
         return self.title
