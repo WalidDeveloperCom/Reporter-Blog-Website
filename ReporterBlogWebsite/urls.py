@@ -39,8 +39,8 @@ schema_view = get_schema_view(
 # Updated urlpatterns
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("blog/", include("Blog.urls")),  # Avoid root-level conflict
-    path("pages/", include("pages.urls")),  # Assign unique prefixes
+    path("", include("Blog.urls")),  
+    path("pages/", include("pages.urls")), 
     # Swagger
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="redoc-ui"),
