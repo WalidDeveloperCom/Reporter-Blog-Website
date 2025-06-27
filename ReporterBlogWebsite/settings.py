@@ -39,8 +39,6 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'tinymce',
-    'rest_framework',
-    'drf_yasg',
     'django_bootstrap5',
         
     # Local apps

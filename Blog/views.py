@@ -7,7 +7,7 @@ from .forms import CommentForm
 
 class HomeView(ListView):
     model = Post
-    template_name = 'blog/index.html'
+    template_name = 'index.html'
     context_object_name = 'posts'
     paginate_by = 6
 
@@ -22,7 +22,7 @@ class HomeView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'blog/article.html'
+    template_name = 'article.html'
     context_object_name = 'post'
     
     def get_context_data(self, **kwargs):
@@ -48,7 +48,7 @@ class PostDetailView(DetailView):
 
 class CategoryView(ListView):
     model = Post
-    template_name = 'blog/index.html'
+    template_name = 'index.html'
     context_object_name = 'posts'
     paginate_by = 6
     
@@ -64,7 +64,7 @@ class CategoryView(ListView):
     
 class TagView(ListView):
     model = Post
-    template_name = 'blog/index.html'
+    template_name = 'index.html'
     context_object_name = 'posts'
     paginate_by = 6
     
@@ -85,8 +85,8 @@ class AuthorDetailView(DetailView):
 
     def get_template_names(self):
         if 'sidebar' in self.request.path:
-            return ['blog/index.html']
-        return ['blog/about.html']
+            return ['index.html']
+        return ['about.html']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

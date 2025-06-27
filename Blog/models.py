@@ -4,9 +4,7 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
 from tinymce.models import HTMLField
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
