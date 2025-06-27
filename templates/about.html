@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About {{ author }} - Reporter Blog{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="breadcrumbs mb-4">
+          <a href="{% url 'home' %}">Home</a>
+          <span class="mx-1">/</span>
+          <a href="{% url 'author_detail' pk=author.pk %}">About</a>
+        </div>
+      </div>
+      <div class="col-lg-8 mx-auto mb-5 mb-lg-0">
+        <img loading="lazy" decoding="async" src="{{ author.profile_picture.url }}" class="img-fluid w-100 mb-4" alt="{{ author }}">
+        <h1 class="mb-4">{{ author }}</h1>
+        <div class="content">
+          {{ author.bio|safe }}
+        </div>
+      </div>
+      
+      {% include 'partials/sidebar.html' %}
+    </div>
+  </div>
+</section>
+{% endblock %}

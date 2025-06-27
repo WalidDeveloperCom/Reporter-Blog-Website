@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title }} - Reporter Blog{% endblock %}
+{% block meta_description %}{{ post.excerpt }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mb-5 mb-lg-0">
+        <article>
+          <img loading="lazy" decoding="async" src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-100">
+          <ul class="post-meta mb-2 mt-4">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="margin-right:5px;margin-top:-4px" class="text-dark" viewBox="0 0 16 16">
+                <path d="M5.5 10.5A.5.5 0 0 1 6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+              </svg> <span>{{ post.published_date|date:"d M, Y" }}</span>
+            </li>
+          </ul>
+          <h1 class="my-3">{{ post.title }}</h1>
+              <div class="mb-4">
+                <strong>Share this post:</strong>
+                <div class="d-flex gap-2 mt-2 flex-wrap">
+                  <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-primary">Facebook</a>
+                  <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" class="btn btn-sm btn-info">Twitter</a>
+                  <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank" class="btn btn-sm btn-secondary">LinkedIn</a>
+                  <a href="https://api.whatsapp.com/send?text={{ post.title }} {{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-success">WhatsApp</a>
+                  <a href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}" class="btn btn-sm btn-dark">Email</a>
+                </div>
+              </div>
+          <ul class="post-meta mb-4">
+            {% for category in post.categories.all %}
+            <li>
+              <a href="{% url 'category' slug=category.slug %}">{{ category.name }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="content text-left">
+            {{ post.content|safe }}
+          </div>
+            <div class="mb-4">
+              <strong>Share this post:</strong>
+              <div class="d-flex gap-2 mt-2 flex-wrap">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-primary">Facebook</a>
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" class="btn btn-sm btn-info">Twitter</a>
+                <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank" class="btn btn-sm btn-secondary">LinkedIn</a>
+                <a href="https://api.whatsapp.com/send?text={{ post.title }} {{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-success">WhatsApp</a>
+                <a href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}" class="btn btn-sm btn-dark">Email</a>
+              </div>
+            </div>
+        </article>
+        
+        <div class="mt-5">
+          <h3>Comments</h3>
+          {% for comment in post.comments.all %}
+            {% if comment.approved %}
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">{{ comment.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ comment.created_date|date:"d M, Y" }}</h6>
+                <p class="card-text">{{ comment.content }}</p>
+              </div>
+            </div>
+            {% endif %}
+          {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+          {% endfor %}
+          
+          <h3 class="mt-4">Leave a Comment</h3>
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ comment_form.name }}
+                </div>
+                
+                <div class="mb-3">
+                    {{ comment_form.email }}
+                </div>
+                
+                <div class="mb-3">
+                    {{ comment_form.content }}
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </div>
+            </form>
+        </div>
+      </div>
+          {% include 'partials/article-sidebar.html' %}
+    </div>
+  </div>
+</section>
+{% endblock %}
